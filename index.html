@@ -139,22 +139,193 @@ header { display:flex; align-items:center; gap:16px; padding:0 24px; height:56px
 .link-box-actions { display:flex; gap:8px; justify-content:flex-end; }
 
 /* PRESENTATION */
-.present-overlay { position:fixed; inset:0; background:#1a1a1a; z-index:500; display:none; flex-direction:column; }
+.present-overlay { position:fixed; inset:0; background:#111; z-index:500; display:none; flex-direction:row; }
 .present-overlay.open { display:flex; }
-.present-stage { flex:1; display:flex; align-items:center; justify-content:center; padding:32px; overflow:hidden; }
-.present-card { background:white; border-radius:10px; box-shadow:0 8px 40px rgba(0,0,0,.5); width:100%; max-width:960px; aspect-ratio:16/9; position:relative; overflow:hidden; display:flex; flex-direction:column; }
-.present-accent { position:absolute; left:0; top:0; bottom:0; width:8px; background:linear-gradient(180deg,#8db600 0%,#1b3a5c 100%); z-index:1; }
-.present-text-content { flex:1; display:flex; flex-direction:column; padding:52px 72px; }
-.present-title { font-family:Georgia,'Times New Roman',serif; font-size:clamp(24px,3.5vw,52px); font-weight:900; color:#1a1a2e; line-height:1.1; margin-bottom:20px; }
-.present-body { font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:clamp(13px,1.8vw,22px); color:#444; line-height:1.7; flex:1; white-space:pre-wrap; overflow:hidden; }
-.present-image-content { flex:1; display:flex; align-items:center; justify-content:center; background:white; padding:0; }
-.present-image-content img { width:100%; height:100%; object-fit:contain; display:block; }
-.present-controls { background:rgba(0,0,0,.95); display:flex; align-items:center; justify-content:center; gap:24px; padding:12px 24px; flex-shrink:0; }
-.present-btn { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); color:#fff; padding:8px 20px; border-radius:8px; font-family:'Segoe UI',system-ui,-apple-system,sans-serif; font-size:14px; cursor:pointer; transition:.15s; }
-.present-btn:hover { background:rgba(255,255,255,.16); }
-.present-counter { font-family:'Courier New',Courier,monospace; font-size:14px; color:rgba(255,255,255,.5); min-width:80px; text-align:center; }
-.present-badge { position:absolute; bottom:20px; right:28px; font-family:'Courier New',Courier,monospace; font-size:13px; color:#bbb; }
 
+/* Left sidebar — slide thumbnails */
+.present-sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  background: #1a1a1a;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 12px 8px;
+  gap: 8px;
+}
+.present-sidebar::-webkit-scrollbar { width: 4px; }
+.present-sidebar::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+.present-sidebar-title {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #666;
+  padding: 0 4px 8px;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+.present-thumb {
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+  background: #fff;
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.present-thumb:hover { border-color: #8db600; }
+.present-thumb.active { border-color: #8db600; box-shadow: 0 0 0 2px rgba(141,182,0,.4); }
+.present-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.present-thumb-text {
+  width: 100%;
+  height: 100%;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: white;
+}
+.present-thumb-text .t { font-size: 7px; font-weight: 700; color: #1a1a2e; line-height: 1.2; font-family: Georgia, serif; }
+.present-thumb-text .b { font-size: 6px; color: #666; line-height: 1.3; }
+.present-thumb-num {
+  position: absolute;
+  bottom: 3px;
+  right: 5px;
+  font-size: 8px;
+  color: #aaa;
+  font-family: 'Courier New', monospace;
+}
+
+/* Right area — slide + controls */
+.present-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+.present-stage-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+.present-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px 16px 16px 20px;
+  overflow: hidden;
+  min-height: 0;
+}
+.present-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 8px 40px rgba(0,0,0,.6);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  /* Size by available height, maintain 16:9 */
+  height: 100%;
+  max-height: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  position: relative;
+}
+.present-accent { position:absolute; left:0; top:0; bottom:0; width:8px; background:linear-gradient(180deg,#8db600 0%,#1b3a5c 100%); z-index:1; }
+.present-text-content { flex:1; display:flex; flex-direction:column; padding:48px 64px; }
+.present-title { font-family:Georgia,'Times New Roman',serif; font-size:clamp(22px,3.2vw,48px); font-weight:900; color:#1a1a2e; line-height:1.1; margin-bottom:18px; }
+.present-body { font-family:'Segoe UI',system-ui,sans-serif; font-size:clamp(12px,1.6vw,20px); color:#444; line-height:1.7; flex:1; white-space:pre-wrap; overflow:hidden; }
+.present-image-content { flex:1; display:flex; align-items:center; justify-content:center; background:white; }
+.present-image-content img { width:100%; height:100%; object-fit:contain; display:block; }
+
+.present-attach-col {
+  width: 80px;
+  flex-shrink: 0;
+  background: #161616;
+  border-right: 1px solid #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.present-attach-col-title {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #666;
+  padding: 10px 6px 6px;
+  border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
+  text-align: center;
+}
+.present-attach-col-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.present-attach-col-list::-webkit-scrollbar { width: 3px; }
+.present-attach-col-list::-webkit-scrollbar-thumb { background: #444; border-radius: 2px; }
+.present-attach-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 7px 4px;
+  background: #222;
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+  width: 68px;
+}
+.present-attach-btn:hover {
+  background: #2d3a1a;
+  border-color: #8db600;
+  transform: translateY(-1px);
+}
+.present-attach-btn .icon { font-size: 18px; line-height: 1; }
+.present-attach-btn .label {
+  font-size: 9px;
+  color: #ccc;
+  font-family: 'Segoe UI', sans-serif;
+  word-break: break-word;
+  line-height: 1.2;
+  max-height: 28px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  width: 100%;
+}
+.present-controls {
+  background: rgba(0,0,0,.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 24px;
+  flex-shrink: 0;
+}
+.present-btn { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:#fff; padding:7px 18px; border-radius:8px; font-family:'Segoe UI',sans-serif; font-size:13px; cursor:pointer; transition:.15s; }
+.present-btn:hover { background:rgba(255,255,255,.18); }
+.present-counter { font-family:'Courier New',monospace; font-size:13px; color:rgba(255,255,255,.5); min-width:70px; text-align:center; }
+
+/* CONFIRM CLOSE MODAL */
 /* CONFIRM MODAL */
 .confirm-overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:9999; display:none; align-items:center; justify-content:center; }
 .confirm-overlay.open { display:flex; }
@@ -297,12 +468,41 @@ header { display:flex; align-items:center; gap:16px; padding:0 24px; height:56px
 
 <!-- PRESENTATION -->
 <div class="present-overlay" id="presentOverlay">
-  <div id="presentContent" style="flex:1;overflow:hidden;display:flex;"></div>
-  <div class="present-controls">
-    <button class="present-btn" id="prevBtn" onclick="prevSlide()">← Anterior</button>
-    <span class="present-counter" id="presentCounter">1 / 1</span>
-    <button class="present-btn" id="nextBtn" onclick="nextSlide()">Próximo →</button>
-    <button class="present-btn" onclick="endPresentation()" style="margin-left:24px;color:#f5c842;">✕ Encerrar</button>
+
+  <!-- Col 1: Slide thumbnails -->
+  <div class="present-sidebar" id="presentSidebar">
+    <div class="present-sidebar-title">Slides</div>
+  </div>
+
+  <!-- Col 2: Attachments (only shown when slide has attachments) -->
+  <div class="present-attach-col" id="presentAttachCol" style="display:none;">
+    <div class="present-attach-col-title">Materiais</div>
+    <div class="present-attach-col-list" id="presentAttachList"></div>
+  </div>
+
+  <!-- Col 3: Slide + controls -->
+  <div class="present-main">
+    <div id="presentContent" style="flex:1;overflow:hidden;display:flex;"></div>
+    <div class="present-controls">
+      <button class="present-btn" onclick="prevSlide()">← Anterior</button>
+      <span class="present-counter" id="presentCounter">1 / 1</span>
+      <button class="present-btn" onclick="nextSlide()">Próximo →</button>
+      <button class="present-btn" onclick="confirmEndPresentation()" style="margin-left:20px;color:#f5c842;">✕ Encerrar</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONFIRM END PRESENTATION MODAL -->
+<div class="confirm-overlay" id="confirmEndOverlay" style="z-index:9998;">
+  <div class="confirm-box">
+    <div style="font-size:36px;margin-bottom:12px;">🎬</div>
+    <div style="font-size:16px;font-weight:600;margin-bottom:8px;">Encerrar apresentação?</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">Você será levado de volta à edição.</div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button onclick="cancelEndPresentation()" style="padding:10px 24px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:14px;cursor:pointer;font-family:inherit;">Cancelar</button>
+      <button onclick="doEndPresentation()" style="padding:10px 24px;border-radius:8px;border:none;background:#1b3a5c;color:#fff;font-size:14px;cursor:pointer;font-family:inherit;font-weight:600;">Encerrar</button>
+    </div>
   </div>
 </div>
 
@@ -314,27 +514,83 @@ let presentIndex = 0;
 let pendingDeleteIdx = -1;
 
 // ── SAVE / LOAD ──
+// Estratégia: tenta IndexedDB → localStorage → avisa usuário
 let db = null;
+let dbBlocked = false;
 
 function openDB() {
   return new Promise(function(resolve) {
     if (db) { resolve(db); return; }
-    if (!window.indexedDB) { resolve(null); return; }
+    if (dbBlocked) { resolve(null); return; }
+    if (!window.indexedDB) { dbBlocked = true; resolve(null); return; }
     try {
       var req = indexedDB.open('english_en_db', 1);
+      var timer = setTimeout(function() { dbBlocked = true; resolve(null); }, 1500);
       req.onupgradeneeded = function(e) {
-        e.target.result.createObjectStore('course');
+        try { e.target.result.createObjectStore('course'); } catch(e2) {}
       };
       req.onsuccess = function(e) {
+        clearTimeout(timer);
         db = e.target.result;
         resolve(db);
       };
-      req.onerror = function() { resolve(null); };
-      req.onblocked = function() { resolve(null); };
-      // Timeout — se demorar mais de 2s, desiste
-      setTimeout(function() { if (!db) resolve(null); }, 2000);
-    } catch(e) { resolve(null); }
+      req.onerror = function() { clearTimeout(timer); dbBlocked = true; resolve(null); };
+      req.onblocked = function() { clearTimeout(timer); dbBlocked = true; resolve(null); };
+    } catch(e) { dbBlocked = true; resolve(null); }
   });
+}
+
+// Salva em chunks no localStorage para contornar limite de 5MB
+function saveChunked(data) {
+  var json = JSON.stringify(data);
+  var chunkSize = 1024 * 1024; // 1MB por chunk
+  var chunks = Math.ceil(json.length / chunkSize);
+  // Limpa chunks anteriores
+  var i = 0;
+  while(localStorage.getItem('enc_chunk_' + i)) {
+    localStorage.removeItem('enc_chunk_' + i);
+    i++;
+  }
+  try {
+    for (var c = 0; c < chunks; c++) {
+      localStorage.setItem('enc_chunk_' + c, json.slice(c * chunkSize, (c+1) * chunkSize));
+    }
+    localStorage.setItem('enc_chunks', chunks);
+    showSaveStatus('✓ Salvo', '#2ecc71');
+    return true;
+  } catch(e) {
+    // Se ainda falhar, salva só texto/links
+    var lite = JSON.parse(JSON.stringify(data));
+    lite.slides = lite.slides.map(function(s) {
+      return Object.assign({}, s, {
+        imageUrl: null,
+        attachments: (s.attachments||[]).filter(function(a){ return a.type==='link'||a.type==='text'; })
+      });
+    });
+    try {
+      localStorage.setItem('enc_lite', JSON.stringify(lite));
+      localStorage.removeItem('enc_chunks');
+      showSaveStatus('⚠ Só texto salvo (imagens muito grandes)', '#e67e22');
+    } catch(e2) {}
+    return false;
+  }
+}
+
+function loadChunked() {
+  try {
+    var chunks = parseInt(localStorage.getItem('enc_chunks') || '0');
+    if (chunks > 0) {
+      var json = '';
+      for (var i = 0; i < chunks; i++) {
+        json += localStorage.getItem('enc_chunk_' + i) || '';
+      }
+      return JSON.parse(json);
+    }
+    // Tenta versão lite
+    var lite = localStorage.getItem('enc_lite');
+    if (lite) return JSON.parse(lite);
+  } catch(e) {}
+  return null;
 }
 
 function save() {
@@ -342,50 +598,18 @@ function save() {
     courseTitle: document.getElementById('courseTitle').value,
     slides: JSON.parse(JSON.stringify(slides))
   };
-
   openDB().then(function(database) {
     if (database) {
       try {
         var tx = database.transaction('course', 'readwrite');
         tx.objectStore('course').put(data, 'main');
-        tx.oncomplete = function() {
-          showSaveStatus('✓ Salvo', '#2ecc71');
-        };
-        tx.onerror = function() {
-          trySaveLocalStorage(data);
-        };
-      } catch(e) {
-        trySaveLocalStorage(data);
-      }
+        tx.oncomplete = function() { showSaveStatus('✓ Salvo', '#2ecc71'); };
+        tx.onerror = function() { saveChunked(data); };
+      } catch(e) { saveChunked(data); }
     } else {
-      trySaveLocalStorage(data);
+      saveChunked(data);
     }
   });
-}
-
-function trySaveLocalStorage(data) {
-  // Tenta salvar tudo
-  try {
-    localStorage.setItem('english_en_course', JSON.stringify(data));
-    showSaveStatus('✓ Salvo', '#2ecc71');
-    return;
-  } catch(e) {}
-  // Se falhar (tamanho), salva só texto/links
-  try {
-    var lite = JSON.parse(JSON.stringify(data));
-    lite.slides = lite.slides.map(function(s) {
-      return Object.assign({}, s, {
-        imageUrl: null,
-        attachments: (s.attachments || []).filter(function(a) {
-          return a.type === 'link' || a.type === 'text';
-        })
-      });
-    });
-    localStorage.setItem('english_en_course', JSON.stringify(lite));
-    showSaveStatus('⚠ Só texto salvo — abra o arquivo localmente para salvar imagens/vídeos', '#e67e22');
-  } catch(e2) {
-    showSaveStatus('✗ Não foi possível salvar', '#e74c3c');
-  }
 }
 
 function showSaveStatus(msg, color) {
@@ -400,6 +624,7 @@ function showSaveStatus(msg, color) {
 
 function loadSaved() {
   openDB().then(function(database) {
+    var loaded = false;
     if (database) {
       try {
         var tx = database.transaction('course', 'readonly');
@@ -407,43 +632,49 @@ function loadSaved() {
         req.onsuccess = function(e) {
           if (e.target.result && e.target.result.slides && e.target.result.slides.length) {
             applyLoadedData(e.target.result);
+            loaded = true;
           } else {
-            loadFromLocalStorage();
+            var data = loadChunked();
+            if (data) applyLoadedData(data);
           }
         };
-        req.onerror = function() { loadFromLocalStorage(); };
-      } catch(e) { loadFromLocalStorage(); }
+        req.onerror = function() {
+          var data = loadChunked();
+          if (data) applyLoadedData(data);
+        };
+      } catch(e) {
+        var data = loadChunked();
+        if (data) applyLoadedData(data);
+      }
     } else {
-      loadFromLocalStorage();
+      var data = loadChunked();
+      if (data) applyLoadedData(data);
+      if (!loaded && dbBlocked) {
+        document.getElementById('storageWarning').style.display = 'block';
+      }
     }
   });
 }
 
-function loadFromLocalStorage() {
-  try {
-    var raw = localStorage.getItem('english_en_course');
-    if (!raw) return;
-    applyLoadedData(JSON.parse(raw));
-  } catch(e) {}
-}
-
 function applyLoadedData(data) {
+  if (!data) return;
   if (data.courseTitle) document.getElementById('courseTitle').value = data.courseTitle;
   if (data.slides && data.slides.length) {
     slides = data.slides.map(function(s) {
       return {
-        id: s.id, title: s.title || '', body: s.body || '',
-        type: s.type || 'text',
-        imageUrl: s.imageUrl || null,
-        attachments: s.attachments || []
+        id: s.id, title: s.title||'', body: s.body||'',
+        type: s.type||'text', imageUrl: s.imageUrl||null,
+        attachments: s.attachments||[]
       };
     });
     renderSidebar();
     selectSlide(0);
+    document.getElementById('storageWarning').style.display = 'none';
   }
 }
 
 // ── ADD SLIDE ──
+
 
 
 
@@ -764,24 +995,126 @@ function closeViewer() {
 function startPresentation() {
   if (!slides.length) { alert('Adicione slides antes de apresentar.'); return; }
   presentIndex = currentIndex >= 0 ? currentIndex : 0;
+  renderPresentSidebar();
   renderPresentSlide();
   document.getElementById('presentOverlay').classList.add('open');
 }
+
+function renderPresentSidebar() {
+  var sb = document.getElementById('presentSidebar');
+  // Remove old thumbs (keep title)
+  var title = sb.querySelector('.present-sidebar-title');
+  sb.innerHTML = '';
+  sb.appendChild(title);
+
+  slides.forEach(function(s, i) {
+    var thumb = document.createElement('div');
+    thumb.className = 'present-thumb' + (i === presentIndex ? ' active' : '');
+    thumb.title = s.title || 'Slide ' + (i+1);
+
+    if (s.type === 'image-slide' && s.imageUrl) {
+      var img = document.createElement('img');
+      img.src = s.imageUrl;
+      img.alt = s.title || '';
+      thumb.appendChild(img);
+    } else {
+      var inner = document.createElement('div');
+      inner.className = 'present-thumb-text';
+      inner.innerHTML = '<div class="t">' + (s.title || 'Sem título') + '</div>' +
+                        (s.body ? '<div class="b">' + s.body.substring(0, 60) + '</div>' : '');
+      thumb.appendChild(inner);
+    }
+
+    var num = document.createElement('div');
+    num.className = 'present-thumb-num';
+    num.textContent = i + 1;
+    thumb.appendChild(num);
+
+    (function(idx) {
+      thumb.addEventListener('click', function() {
+        presentIndex = idx;
+        renderPresentSlide();
+        renderPresentSidebar();
+        // Scroll thumb into view
+        thumb.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      });
+    })(i);
+
+    sb.appendChild(thumb);
+  });
+}
+
 function renderPresentSlide() {
   var s = slides[presentIndex];
   document.getElementById('presentCounter').textContent = (presentIndex+1) + ' / ' + slides.length;
   var pc = document.getElementById('presentContent');
+
+  // Render slide card
   if (s.type === 'image-slide') {
-    pc.innerHTML = '<div class="present-stage"><div class="present-card"><div class="present-image-content"><img src="' + s.imageUrl + '" alt="' + (s.title||'') + '"></div></div></div>';
+    pc.innerHTML = '<div class="present-stage"><div class="present-card">' +
+      '<div class="present-image-content"><img src="' + (s.imageUrl||'') + '" alt="' + (s.title||'') + '"></div>' +
+      '</div></div>';
   } else {
-    pc.innerHTML = '<div class="present-stage"><div class="present-card"><div class="present-accent"></div><div class="present-text-content"><div class="present-title">' + (s.title || '') + '</div><div class="present-body">' + (s.body || '') + '</div></div></div></div>';
+    pc.innerHTML = '<div class="present-stage"><div class="present-card">' +
+      '<div class="present-accent"></div>' +
+      '<div class="present-text-content">' +
+        '<div class="present-title">' + (s.title||'') + '</div>' +
+        '<div class="present-body">' + (s.body||'') + '</div>' +
+      '</div></div></div>';
   }
+
+  // Render attach column
+  var attachCol  = document.getElementById('presentAttachCol');
+  var attachList = document.getElementById('presentAttachList');
+  attachList.innerHTML = '';
+
+  if (s.attachments && s.attachments.length) {
+    attachCol.style.display = 'flex';
+    var icons = { image:'🖼', video:'🎬', file:'📄', link:'🔗', text:'📝' };
+    s.attachments.forEach(function(a, i) {
+      var btn = document.createElement('button');
+      btn.className = 'present-attach-btn';
+      btn.innerHTML = '<span class="icon">' + (icons[a.type]||'📄') + '</span>' +
+                      '<span class="label">' + a.name + '</span>';
+      btn.addEventListener('click', function() { openViewer(a); });
+      attachList.appendChild(btn);
+    });
+  } else {
+    attachCol.style.display = 'none';
+  }
+
+  // Update sidebar active state
+  document.querySelectorAll('.present-thumb').forEach(function(el, i) {
+    el.classList.toggle('active', i === presentIndex);
+  });
 }
-function nextSlide() { if (presentIndex < slides.length-1) { presentIndex++; renderPresentSlide(); } }
-function prevSlide() { if (presentIndex > 0) { presentIndex--; renderPresentSlide(); } }
-function endPresentation() { document.getElementById('presentOverlay').classList.remove('open'); }
+
+function nextSlide() {
+  if (presentIndex < slides.length-1) { presentIndex++; renderPresentSlide(); scrollPresentThumb(); }
+}
+function prevSlide() {
+  if (presentIndex > 0) { presentIndex--; renderPresentSlide(); scrollPresentThumb(); }
+}
+function scrollPresentThumb() {
+  var thumbs = document.querySelectorAll('.present-thumb');
+  if (thumbs[presentIndex]) thumbs[presentIndex].scrollIntoView({ block:'nearest', behavior:'smooth' });
+}
+
+function confirmEndPresentation() {
+  document.getElementById('confirmEndOverlay').classList.add('open');
+}
+function cancelEndPresentation() {
+  document.getElementById('confirmEndOverlay').classList.remove('open');
+}
+function doEndPresentation() {
+  document.getElementById('confirmEndOverlay').classList.remove('open');
+  document.getElementById('presentOverlay').classList.remove('open');
+}
+// Keep old name for compatibility
+function endPresentation() { confirmEndPresentation(); }
 
 // ── EXPORT / IMPORT COURSE ──
+
 function exportData() {
   var data = { courseTitle: document.getElementById('courseTitle').value, slides: slides };
   var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
@@ -812,7 +1145,7 @@ document.addEventListener('keydown', function(e) {
   if (document.getElementById('presentOverlay').classList.contains('open')) {
     if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
     if (e.key === 'ArrowLeft') prevSlide();
-    if (e.key === 'Escape') endPresentation();
+    if (e.key === 'Escape') confirmEndPresentation();
   } else {
     if (e.key === 'Escape') { closeViewer(); closeLinkModal(); closeTextModal(); }
   }
